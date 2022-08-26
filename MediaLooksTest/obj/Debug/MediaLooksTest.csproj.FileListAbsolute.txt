@@ -1,0 +1,8 @@
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\Debug\MediaLooksTest.exe.config
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\Debug\MediaLooksTest.exe
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\Debug\MediaLooksTest.pdb
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\Debug\MediaLooksTest.csproj.AssemblyReference.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\Debug\MediaLooksTest.csproj.SuggestedBindingRedirects.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\Debug\MediaLooksTest.csproj.CoreCompileInputs.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\Debug\MediaLooksTest.exe
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\Debug\MediaLooksTest.pdb
