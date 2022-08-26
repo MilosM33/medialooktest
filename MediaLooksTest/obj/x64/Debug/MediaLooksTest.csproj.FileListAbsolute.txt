@@ -1,0 +1,10 @@
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\x64\Debug\MediaLooksTest.exe.config
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\x64\Debug\MediaLooksTest.exe
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\x64\Debug\MediaLooksTest.pdb
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\bin\x64\Debug\Interop.MPLATFORMLib.dll
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.AssemblyReference.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.SuggestedBindingRedirects.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.CoreCompileInputs.cache
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.CopyComplete
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.exe
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.pdb
