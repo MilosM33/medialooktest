@@ -20,12 +20,12 @@ namespace MediaLooksTest
 
             String url = (signalingStr + "/Room" + +r.Next(1000) + "/Streamer" + r.Next(1000));
             String pbsId = "";
+
+
             mFile.FileNameSet(@"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos\video1.mp4", "");
             mFile.PropsSet("loop", "true");
             mFile.FilePlayStart();
             mFile.PluginsAdd(webRTC, 10);
-
-
 
             // Stream
             // Half duplex
@@ -34,7 +34,6 @@ namespace MediaLooksTest
             
 
             Console.WriteLine(url);
-
             Console.ReadLine();
             webRTC.Logout();
         }
