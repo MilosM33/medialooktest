@@ -1,16 +1,30 @@
 const btnConnect = document.getElementById("btnConnect");
+const btnSwitch = document.getElementById("btnSwitch");
+const cameraNumber = document.getElementById("cameraNumber");
 const peerInput = document.getElementById("peerInput");
 const roomInput = document.getElementById("roomInput");
-
 const videoContainer = document.getElementById("videoContainer");
-var signalingServer = "http://rtc.medialooks.com:8889";
+const signalingServer = "http://rtc.medialooks.com:8889";
+
+let webrtc;
+let peerId;
+let room;
 
 btnConnect.addEventListener("click", connect);
+btnSwitch.addEventListener("click", switchCamera);
+
+function switchCamera() {
+  let value = cameraNumber.value;
+  if (value == "") {
+    value = 0;
+  }
+  webrtc.sendDataChannelMessageToPeer(peerId, value);
+}
 
 function connect() {
-  var peerId = peerInput.value == "" ? "Streamer467" : peerInput.value;
-  var room = roomInput.value == "" ? "Room485" : roomInput.value;
-  var webrtc = new SimpleWebRTC({
+  peerId = peerInput.value == "" ? "Streamer983" : peerInput.value;
+  room = roomInput.value == "" ? "Room505" : roomInput.value;
+  webrtc = new SimpleWebRTC({
     target: peerId,
     url: signalingServer,
     iceServers: [
@@ -24,7 +38,7 @@ function connect() {
     localVideoEl: "",
     remoteVideosEl: "",
     autoRequestMedia: false,
-    debug: true,
+    debug: false,
     detectSpeakingEvents: true,
     autoAdjustMic: false,
     media: {
@@ -59,15 +73,12 @@ webrtc.on("readyToCall", function () {
     video.setAttribute("width", "100%");
     video.setAttribute("height", "100%");
 
-    videoEl = video;
-    container.innerHTML = "";
     container.appendChild(video);
     webrtc.stopLocalVideo();
     video.muted = true;
     video.play();
   });
 
-  //Handle removing video by target peer
   webrtc.on("videoRemoved", function (video, peer) {
     console.log("video removed ", peer);
     var container = document.getElementById("videoContainer");
@@ -76,8 +87,6 @@ webrtc.on("readyToCall", function () {
       peer.strongId == peerId ||
       peer.nickName == peerId
     ) {
-      videoEl = null;
-      container.innerHTML = "";
       var videoStub = document.createElement("video");
       container.appendChild(videoStub);
     }

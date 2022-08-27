@@ -12,64 +12,102 @@ namespace MediaLooksTest
 
 
 
-
+        static MFileClass current;
+        static List<MFileClass> videos = new List<MFileClass>();
+        static MWebRTCClass masterRTC = new MWebRTCClass();
         static void Main(string[] args)
         {
-            MWriterClass writer = new MWriterClass();
-            MWebRTCClass webRTC = new MWebRTCClass();
-            Random r = new Random();
-            const string signalingStr = "http://rtc.medialooks.com:8889";
-            String url = signalingStr + $"/Room{r.Next(1000)}/Streamer{r.Next(1000)}";
-            String pbsId = "";
+            
+            
+            SourceMixer sourceMixer = new SourceMixer();
+            String url = GenerateRandomUrl();
 
-            List<MFileClass> videos = new List<MFileClass>();
+            
+            List<MWebRTCClass> slaves = new List<MWebRTCClass>();
             String videoPath = @"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos";
-            foreach(String filePath in Directory.EnumerateFiles(videoPath))
-            {
-                MFileClass temp = new MFileClass();
-                temp.FileNameSet(filePath,"");
-                videos.Add(temp);
-            }
 
             // Stream
             // Half duplex iba video stream, žiadna webka
-            webRTC.PropsSet("mode", "sender");
+            masterRTC.PropsSet("mode", "sender");
 
-            webRTC.Login(url, "", out pbsId);
+            masterRTC.Login(url, "", out _);
+            masterRTC.OnEvent += MasterRTC_OnEvent;
 
+
+
+            slaves.Add(masterRTC);
+
+            foreach (String filePath in Directory.EnumerateFiles(videoPath))
+            {
+                MFileClass temp = new MFileClass();
+                temp.FileNameSet(filePath, "");
+                temp.PropsSet("loop", "true");
+                videos.Add(temp);
+
+                /*
+                 MWebRTCClass slave = new MWebRTCClass();
+                slave.Login(url, "", out _);
+                slaves.Add(slave);
+                */
+            }
+            current = videos[0];
+            
+            current.FilePlayStart();
+            current.PluginsAdd(masterRTC,10);
             Console.WriteLine(url);
 
-            MFileClass current = videos[0];
-            current.PropsSet("loop", "true");
-            current.FilePlayStart();
-            current.PluginsAdd(webRTC, 10);
-            while (true)
+            /*
+             * 
+             * Multiple 
+                for (int i = 0; i < videos.Count; i++)
             {
-                Console.WriteLine("Zadaj číslo od 1 po " + videos.Count);
-                int input = 0;
-                if (int.TryParse(Console.ReadLine(), out input))
-                {
-                    
-                    if(input < videos.Count + 1)
-                    {
-                        //Zastaví video
-                        current.PropsSet("loop", "false");
-                        current.FilePlayStop(0);
-                        current.PluginsRemove(webRTC);
+                MFileClass file = videos[i];
+                MWebRTCClass slave = slaves[i];
 
-                        // Zmení video
-                        current = videos[input - 1];
-                        current.PropsSet("loop", "true");
-                        current.FilePlayStart();
-                        current.PluginsAdd(webRTC,10);
+                file.PropsSet("loop", "false");
+                file.FilePlayStop(0);
+                file.PluginsAdd(slave, 10);
 
-
-                    }
-                }
-                
             }
+             */
+
             Console.ReadLine();
-            webRTC.Logout();
+            masterRTC.Logout();
+        }
+
+        private static void MasterRTC_OnEvent(string bsChannelID, string bsEventName, string bsEventParam, object pEventObject)
+        {
+            int value;
+            if(bsEventName == "message" && int.TryParse(bsEventParam, out value))
+            {
+                Console.WriteLine($"Zmena streamu na stream {value} ");
+                value -= 1;
+                if (value < videos.Count)
+                {
+                    current.FilePlayStop(0);
+                    current.PluginsRemove(masterRTC);
+                    current = videos[value];
+                    current.PluginsAdd(masterRTC,10);
+                    current.FilePlayStart();
+                }
+                else
+                {
+                    Console.WriteLine("Zadajte číslo od 1 po " + videos.Count);
+                }
+            }
+        }
+
+        const string SIGNALINGSERVER = "http://rtc.medialooks.com:8889";
+        static Random r = new Random();
+        static string GenerateRandomRoom()
+        {
+            String url = SIGNALINGSERVER + $"/Room{r.Next(1000)}";
+            return url;
+        }
+        static string GenerateRandomUrl()
+        {
+            String url = GenerateRandomRoom() + $"/Streamer{r.Next(1000)}";
+            return url;
         }
     }
 }
