@@ -3,13 +3,13 @@ const peerInput = document.getElementById("peerInput");
 const roomInput = document.getElementById("roomInput");
 
 const videoContainer = document.getElementById("videoContainer");
-var signalingServer = "https://rtc.medialooks.com:8889";
+var signalingServer = "http://rtc.medialooks.com:8889";
 
 btnConnect.addEventListener("click", connect);
 
 function connect() {
-  var peerId = peerInput.value == "" ? "Streamer471" : peerInput.value;
-  var room = roomInput.value == "" ? "Room660" : roomInput.value;
+  var peerId = peerInput.value == "" ? "Streamer467" : peerInput.value;
+  var room = roomInput.value == "" ? "Room485" : roomInput.value;
   var webrtc = new SimpleWebRTC({
     target: peerId,
     url: signalingServer,
