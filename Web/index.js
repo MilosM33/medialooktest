@@ -3,7 +3,10 @@ const btnSwitch = document.getElementById("btnSwitch");
 const cameraNumber = document.getElementById("cameraNumber");
 const peerInput = document.getElementById("peerInput");
 const roomInput = document.getElementById("roomInput");
+
 const videoContainer = document.getElementById("videoContainer");
+const masterContainer = document.getElementById("masterContainer");
+let masterId = "";
 const signalingServer = "http://rtc.medialooks.com:8889";
 
 let webrtc;
@@ -19,6 +22,12 @@ function switchCamera() {
     value = 0;
   }
   webrtc.sendDataChannelMessageToPeer(peerId, value);
+}
+function addVideo(video) {
+  const parrent = document.createElement("div");
+  parrent.className = "col-md-4";
+  parrent.appendChild(video);
+  return parrent;
 }
 
 function connect() {
@@ -47,19 +56,6 @@ function connect() {
     },
   });
 
-  /*   
-Webrtc nepríjme call pravdepodobne kvôli validácii na strane servera
-
-
-webrtc.on("readyToCall", function () {
-    webrtc.setInfo("", webrtc.connection.connection.id, ""); // Store strongId
-
-    if (room) {
-      webrtc.joinRoom(room);
-    }
-  }); 
-
-*/
   if (room) {
     webrtc.joinRoom(room);
   }
@@ -73,7 +69,14 @@ webrtc.on("readyToCall", function () {
     video.setAttribute("width", "100%");
     video.setAttribute("height", "100%");
 
-    container.appendChild(video);
+    // ak master je prazdny
+    if (masterContainer.childElementCount === 0) {
+      masterContainer.appendChild(video);
+      masterId = video.id;
+    } else {
+      container.appendChild(addVideo(video));
+    }
+
     webrtc.stopLocalVideo();
     video.muted = true;
     video.play();
@@ -81,7 +84,13 @@ webrtc.on("readyToCall", function () {
 
   webrtc.on("videoRemoved", function (video, peer) {
     console.log("video removed ", peer);
-    var container = document.getElementById("videoContainer");
+    var video = document.getElementById(video.id).parentNode;
+    if (masterId === video.id) {
+      masterContainer.removeChild(video);
+    } else {
+      videoContainer.removeChild(video);
+    }
+
     if (
       peer.id == peerId ||
       peer.strongId == peerId ||

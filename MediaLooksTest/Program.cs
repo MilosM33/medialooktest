@@ -14,7 +14,11 @@ namespace MediaLooksTest
 
         static MFileClass current;
         static List<MFileClass> videos = new List<MFileClass>();
+        static List<String> videoPaths = new List<string>();
+
+
         static MWebRTCClass masterRTC = new MWebRTCClass();
+        static List<MWebRTCClass> slaves = new List<MWebRTCClass>();
         static void Main(string[] args)
         {
             
@@ -23,19 +27,8 @@ namespace MediaLooksTest
             String url = GenerateRandomUrl();
 
             
-            List<MWebRTCClass> slaves = new List<MWebRTCClass>();
+            
             String videoPath = @"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos";
-
-            // Stream
-            // Half duplex iba video stream, žiadna webka
-            masterRTC.PropsSet("mode", "sender");
-
-            masterRTC.Login(url, "", out _);
-            masterRTC.OnEvent += MasterRTC_OnEvent;
-
-
-
-            slaves.Add(masterRTC);
 
             foreach (String filePath in Directory.EnumerateFiles(videoPath))
             {
@@ -43,37 +36,38 @@ namespace MediaLooksTest
                 temp.FileNameSet(filePath, "");
                 temp.PropsSet("loop", "true");
                 videos.Add(temp);
+                videoPaths.Add(filePath);
 
-                /*
                  MWebRTCClass slave = new MWebRTCClass();
-                slave.Login(url, "", out _);
-                slaves.Add(slave);
-                */
+                 slave.Login(url, "", out _);
+                 slaves.Add(slave);
+                
             }
+            // Choose master
+            masterRTC = slaves[0];
+            masterRTC.OnEvent += MasterRTC_OnEvent;
+            // Stream
+            // Half duplex iba video stream, žiadna webka
+            masterRTC.PropsSet("mode", "sender");
             current = videos[0];
-            
-            current.FilePlayStart();
-            current.PluginsAdd(masterRTC,10);
             Console.WriteLine(url);
 
-            /*
-             * 
-             * Multiple 
-                for (int i = 0; i < videos.Count; i++)
+            for (int i = 0; i < videos.Count; i++)
             {
                 MFileClass file = videos[i];
                 MWebRTCClass slave = slaves[i];
 
-                file.PropsSet("loop", "false");
-                file.FilePlayStop(0);
+                file.FilePlayStart();
                 file.PluginsAdd(slave, 10);
 
             }
-             */
 
             Console.ReadLine();
             masterRTC.Logout();
         }
+
+
+        
 
         private static void MasterRTC_OnEvent(string bsChannelID, string bsEventName, string bsEventParam, object pEventObject)
         {
@@ -84,11 +78,22 @@ namespace MediaLooksTest
                 value -= 1;
                 if (value < videos.Count)
                 {
-                    current.FilePlayStop(0);
-                    current.PluginsRemove(masterRTC);
+                    MFileClass prev = current;
                     current = videos[value];
-                    current.PluginsAdd(masterRTC,10);
-                    current.FilePlayStart();
+
+                    String prevPath;
+                    String currentPath;
+
+                    current.FileNameGet(out currentPath);
+                    prev.FileNameGet(out prevPath);
+
+                    current.FileNameSet(prevPath, "");
+                    prev.FileNameSet(currentPath, "");
+
+
+
+
+
                 }
                 else
                 {
