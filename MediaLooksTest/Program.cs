@@ -12,15 +12,12 @@ namespace MediaLooksTest
         {
             MWriterClass writer = new MWriterClass();
             MWebRTCClass webRTC = new MWebRTCClass();
-            MSendersClass mSendersClass = new MSendersClass();
             MFileClass mFile = new MFileClass();
             Random r = new Random();
 
             const string signalingStr = "https://rtc.medialooks.com:8889";
-
-            String url = (signalingStr + "/Room" + +r.Next(1000) + "/Streamer" + r.Next(1000));
+            String url = signalingStr + $"/Room{r.Next(1000)}/Streamer{r.Next(1000)}";
             String pbsId = "";
-
 
             mFile.FileNameSet(@"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos\video1.mp4", "");
             mFile.PropsSet("loop", "true");
@@ -28,10 +25,10 @@ namespace MediaLooksTest
             mFile.PluginsAdd(webRTC, 10);
 
             // Stream
-            // Half duplex
+            // Half duplex iba video stream, žiadna webka
             webRTC.PropsSet("mode", "sender");
+
             webRTC.Login(url, "", out pbsId);
-            
 
             Console.WriteLine(url);
             Console.ReadLine();
