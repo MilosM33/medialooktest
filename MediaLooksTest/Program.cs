@@ -12,24 +12,21 @@ namespace MediaLooksTest
 
 
 
-        static MFileClass current;
+        static MFileClass masterSource;
         static List<MFileClass> videos = new List<MFileClass>();
         static List<String> videoPaths = new List<string>();
-
+        static String videoPath = @"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos";
 
         static MWebRTCClass masterRTC = new MWebRTCClass();
         static List<MWebRTCClass> slaves = new List<MWebRTCClass>();
         static void Main(string[] args)
         {
-            
-            
-            SourceMixer sourceMixer = new SourceMixer();
             String url = GenerateRandomUrl();
 
-            
-            
-            String videoPath = @"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos";
+            masterRTC = new MWebRTCClass();
+            masterRTC.Login(url, "", out _);
 
+            // create slaves
             foreach (String filePath in Directory.EnumerateFiles(videoPath))
             {
                 MFileClass temp = new MFileClass();
@@ -38,62 +35,52 @@ namespace MediaLooksTest
                 videos.Add(temp);
                 videoPaths.Add(filePath);
 
-                 MWebRTCClass slave = new MWebRTCClass();
-                 slave.Login(url, "", out _);
-                 slaves.Add(slave);
-                
+                MWebRTCClass slave = new MWebRTCClass();
+                slave.Login(url, "", out _);
+                slaves.Add(slave);
+
+                temp.FilePlayStart();
+                temp.PluginsAdd(slave, 10);
+
             }
-            // Choose master
-            masterRTC = slaves[0];
+
+            masterSource = new MFileClass();
+            masterSource.FileNameSet(videoPaths[0], "");
+            masterSource.PropsSet("loop", "true");
+            masterSource.FilePlayStart();
+            masterSource.PluginsAdd(masterRTC, 10);
+
             masterRTC.OnEvent += MasterRTC_OnEvent;
+
             // Stream
             // Half duplex iba video stream, žiadna webka
             masterRTC.PropsSet("mode", "sender");
-            current = videos[0];
             Console.WriteLine(url);
 
-            for (int i = 0; i < videos.Count; i++)
-            {
-                MFileClass file = videos[i];
-                MWebRTCClass slave = slaves[i];
-
-                file.FilePlayStart();
-                file.PluginsAdd(slave, 10);
-
-            }
 
             Console.ReadLine();
             masterRTC.Logout();
         }
 
 
-        
+
 
         private static void MasterRTC_OnEvent(string bsChannelID, string bsEventName, string bsEventParam, object pEventObject)
         {
             int value;
-            if(bsEventName == "message" && int.TryParse(bsEventParam, out value))
+            if (bsEventName == "message" && int.TryParse(bsEventParam, out value))
             {
+                value--;
                 Console.WriteLine($"Zmena streamu na stream {value} ");
-                value -= 1;
                 if (value < videos.Count)
                 {
-                    MFileClass prev = current;
-                    current = videos[value];
+                    MFileClass next = videos[value];
+                    double position;
+                    // get video playback time
+                    next.FilePosGet(out position);
 
-                    String prevPath;
-                    String currentPath;
-
-                    current.FileNameGet(out currentPath);
-                    prev.FileNameGet(out prevPath);
-
-                    current.FileNameSet(prevPath, "");
-                    prev.FileNameSet(currentPath, "");
-
-
-
-
-
+                    masterSource.FileNameSet(videoPaths[value], "");
+                    masterSource.FilePosSet(position, 0);
                 }
                 else
                 {

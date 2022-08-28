@@ -13,16 +13,16 @@
     />
   </head>
   <body>
-    <div class="container">
+    <div class="container my-3">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 my-2">
           <input type="text" class="form-control" placeholder="RoomId" aria-label="Username" aria-describedby="basic-addon1" id="roomInput">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 my-2">
           <input type="text" class="form-control" placeholder="PeerId" aria-label="Username" aria-describedby="basic-addon1" id="peerInput">
         </div>
        
-        <div class="col-md-4">
+        <div class="col-md-4 my-2">
           <button class="btn btn-primary" id="btnConnect">
             Connect
           </button>
@@ -40,12 +40,17 @@
       </div>
       <div class="container">
         <div class="row justify-content-center">
+          <h1>Output stream</h1>
           <div id="masterContainer" class="col-md-6">
 
           </div>
         </div>
       </div>
-      <div id="videoContainer" class="container">
+      <div class="container">
+        <h1>
+          Input streams
+        </h1>
+        <div class="row" id="videoContainer"></div>
         
       </div>
 
