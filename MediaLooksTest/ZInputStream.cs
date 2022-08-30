@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using MPLATFORMLib;
 namespace MediaLooksTest
 {
-    internal class InputStream
+    internal class ZInputStream
     {
         private MWebRTCClass _webrtc;
         private String _url;
-        public InputStream(String room_url, String streamer_name)
+        public ZInputStream(String room_url, String streamer_name)
         {
             _webrtc = new MWebRTCClass();
             _url = room_url + streamer_name;

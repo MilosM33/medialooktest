@@ -21,35 +21,35 @@ namespace MediaLooksTest
  
             // Inputs and outputs
 
-            Input input1 = new Input(Path.Combine(videoPath, "video1.mp4"));
-            Input input2 = new Input(Path.Combine(videoPath, "video2.mp4"));
-            Input input3 = new Input(Path.Combine(videoPath, "video3.mp4"));
+            ZInput input1 = new ZInput(Path.Combine(videoPath, "video1.mp4"));
+            ZInput input2 = new ZInput(Path.Combine(videoPath, "video2.mp4"));
+            ZInput input3 = new ZInput(Path.Combine(videoPath, "video3.mp4"));
 
-            Output output = new Output(Path.Combine(videoPath, "video1.mp4"));
+            ZOutput output = new ZOutput(Path.Combine(videoPath, "video1.mp4"));
 
 
             // Output stream
-            OutputStream stream1 = new OutputStream(ROOM_URL, streamer_name:"Output");
+            ZOutputStream stream1 = new ZOutputStream(ROOM_URL, streamer_name:"Output");
             stream1.Init();
             stream1.AddVideoSource(output.GetSource());
 
 
             // Previews of input streams
-            InputStream stream2 = new InputStream(ROOM_URL, streamer_name: "Input1");
+            ZInputStream stream2 = new ZInputStream(ROOM_URL, streamer_name: "Input1");
             stream2.Init();
             stream2.AddVideoSource(input1.GetSource());
 
-            InputStream stream3 = new InputStream(ROOM_URL, streamer_name: "Input2");
+            ZInputStream stream3 = new ZInputStream(ROOM_URL, streamer_name: "Input2");
             stream3.Init();
             stream3.AddVideoSource(input2.GetSource());
 
-            InputStream stream4 = new InputStream(ROOM_URL, streamer_name: "Input3");
+            ZInputStream stream4 = new ZInputStream(ROOM_URL, streamer_name: "Input3");
             stream4.Init();
             stream4.AddVideoSource(input3.GetSource());
 
             // Communication layer
 
-            List<Input> inputs = new List<Input>()
+            List<ZInput> inputs = new List<ZInput>()
             {
                 input1, input2, input3
             };
@@ -57,7 +57,7 @@ namespace MediaLooksTest
             // Output stream webrtc
             MWebRTCClass webrtc = stream1.GetWebRTC();
 
-            CommunicationStream communicationStream = new CommunicationStream(webrtc);
+            ZCommunicationStream communicationStream = new ZCommunicationStream(webrtc);
             communicationStream.SetInputs(inputs);
 
             communicationStream.SetOutputStream(stream1);

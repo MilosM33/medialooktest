@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using MPLATFORMLib;
 namespace MediaLooksTest
 {
-    internal class Input
+    internal class ZInput
     {
 
         private MFileClass _source;
-        public Input(String path)
+        public ZInput(String path)
         {
             _source = new MFileClass();
             _source.FileNameSet(path, "");

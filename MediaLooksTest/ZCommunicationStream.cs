@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 using MPLATFORMLib;
 namespace MediaLooksTest
 {
-    internal class CommunicationStream
+    internal class ZCommunicationStream
     {
         private MWebRTCClass _webrtc;
-        private List<Input> _inputs;
-        private OutputStream _outputStream;
-        public CommunicationStream(MWebRTCClass webrtc)
+        private List<ZInput> _inputs;
+        private ZOutputStream _outputStream;
+        public ZCommunicationStream(MWebRTCClass webrtc)
         {
             _webrtc = webrtc;
         }
 
-        public void SetInputs(List<Input> inputSources)
+        public void SetInputs(List<ZInput> inputSources)
         {
             _inputs = inputSources;
         }
-        public void SetOutputStream(OutputStream outputStream)
+        public void SetOutputStream(ZOutputStream outputStream)
         {
             _outputStream = outputStream;
         }
@@ -42,14 +42,11 @@ namespace MediaLooksTest
                     MFileClass next = _inputs[value].GetSource();
                     double position;
 
-
                     // get video path
                     next.FileNameGet(out videoPath);
 
                     // get video playback time
                     next.FilePosGet(out position);
-
-                    
                     _outputStream.ChangeVideoSource(videoPath, position);
                     
                 }
