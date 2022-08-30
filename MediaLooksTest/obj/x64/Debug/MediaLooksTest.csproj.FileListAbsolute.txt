@@ -8,3 +8,5 @@ C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x6
 C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.CopyComplete
 C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.exe
 C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.pdb
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.Properties.Resources.resources
+C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\obj\x64\Debug\MediaLooksTest.csproj.GenerateResource.cache

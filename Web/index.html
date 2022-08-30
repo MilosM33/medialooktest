@@ -16,10 +16,10 @@
     <div class="container my-3">
       <div class="row">
         <div class="col-md-4 my-2">
-          <input type="text" class="form-control" placeholder="RoomId" aria-label="Username" aria-describedby="basic-addon1" id="roomInput">
+          <input type="text" class="form-control" placeholder="RoomId" id="roomInput" value="Room9999">
         </div>
         <div class="col-md-4 my-2">
-          <input type="text" class="form-control" placeholder="PeerId" aria-label="Username" aria-describedby="basic-addon1" id="peerInput">
+          <input type="text" class="form-control" placeholder="PeerId" id="peerInput" value="Streamer9999">
         </div>
        
         <div class="col-md-4 my-2">
@@ -41,8 +41,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <h1>Output stream</h1>
-          <div id="masterContainer" class="col-md-6">
-
+          <div id="outputContainer" class="col-md-6">
           </div>
         </div>
       </div>
@@ -50,7 +49,14 @@
         <h1>
           Input streams
         </h1>
-        <div class="row" id="videoContainer"></div>
+        <div class="row">
+          <div class="col-md-4" id="inputContainer1">
+          </div>
+          <div class="col-md-4" id="inputContainer2">
+          </div>
+          <div class="col-md-4" id="inputContainer3">
+          </div>
+        </div>
         
       </div>
 

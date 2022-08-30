@@ -12,94 +12,60 @@ namespace MediaLooksTest
 
 
 
-        static MFileClass masterSource;
-        static List<MFileClass> videos = new List<MFileClass>();
-        static List<String> videoPaths = new List<string>();
-        static String videoPath = @"C:\Users\milos\programy\Programovanie\Wezeo\MediaLooksTest\MediaLooksTest\Videos";
-
-        static MWebRTCClass masterRTC = new MWebRTCClass();
-        static List<MWebRTCClass> slaves = new List<MWebRTCClass>();
+        const string ROOM_URL = "http://rtc.medialooks.com:8889/Room9999/";
         static void Main(string[] args)
         {
-            String url = GenerateRandomUrl();
+            Console.WriteLine(ROOM_URL);
 
-            masterRTC = new MWebRTCClass();
-            masterRTC.Login(url, "", out _);
+            string videoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Videos");
+ 
+            // Inputs and outputs
 
-            // create slaves
-            foreach (String filePath in Directory.EnumerateFiles(videoPath))
+            Input input1 = new Input(Path.Combine(videoPath, "video1.mp4"));
+            Input input2 = new Input(Path.Combine(videoPath, "video2.mp4"));
+            Input input3 = new Input(Path.Combine(videoPath, "video3.mp4"));
+
+            Output output = new Output(Path.Combine(videoPath, "video1.mp4"));
+
+
+            // Output stream
+            OutputStream stream1 = new OutputStream(ROOM_URL, "Output");
+            stream1.Init();
+            stream1.AddVideoSource(output.GetSource());
+
+
+            // Previews of input streams
+            InputStream stream2 = new InputStream(ROOM_URL, "Input1");
+            stream2.Init();
+            stream2.AddVideoSource(input1.GetSource());
+
+            InputStream stream3 = new InputStream(ROOM_URL, "Input2");
+            stream3.Init();
+            stream3.AddVideoSource(input2.GetSource());
+
+            InputStream stream4 = new InputStream(ROOM_URL, "Input3");
+            stream4.Init();
+            stream4.AddVideoSource(input3.GetSource());
+
+            // Communication layer
+
+            List<Input> inputs = new List<Input>()
             {
-                MFileClass temp = new MFileClass();
-                temp.FileNameSet(filePath, "");
-                temp.PropsSet("loop", "true");
-                videos.Add(temp);
-                videoPaths.Add(filePath);
+                input1, input2, input3
+            };
 
-                MWebRTCClass slave = new MWebRTCClass();
-                slave.Login(url, "", out _);
-                slaves.Add(slave);
+            MWebRTCClass webrtc = stream1.GetWebRTC();
+            CommunicationStream communicationStream = new CommunicationStream(webrtc);
+            communicationStream.SetInputs(inputs);
 
-                temp.FilePlayStart();
-                temp.PluginsAdd(slave, 10);
-
-            }
-
-            masterSource = new MFileClass();
-            masterSource.FileNameSet(videoPaths[0], "");
-            masterSource.PropsSet("loop", "true");
-            masterSource.FilePlayStart();
-            masterSource.PluginsAdd(masterRTC, 10);
-
-            masterRTC.OnEvent += MasterRTC_OnEvent;
-
-            // Stream
-            // Half duplex iba video stream, žiadna webka
-            masterRTC.PropsSet("mode", "sender");
-            Console.WriteLine(url);
+            communicationStream.SetOutputStream(stream1);
+            communicationStream.Init();
 
 
             Console.ReadLine();
-            masterRTC.Logout();
+          
         }
 
-
-
-
-        private static void MasterRTC_OnEvent(string bsChannelID, string bsEventName, string bsEventParam, object pEventObject)
-        {
-            int value;
-            if (bsEventName == "message" && int.TryParse(bsEventParam, out value))
-            {
-                value--;
-                Console.WriteLine($"Zmena streamu na stream {value} ");
-                if (value < videos.Count)
-                {
-                    MFileClass next = videos[value];
-                    double position;
-                    // get video playback time
-                    next.FilePosGet(out position);
-
-                    masterSource.FileNameSet(videoPaths[value], "");
-                    masterSource.FilePosSet(position, 0);
-                }
-                else
-                {
-                    Console.WriteLine("Zadajte číslo od 1 po " + videos.Count);
-                }
-            }
-        }
-
-        const string SIGNALINGSERVER = "http://rtc.medialooks.com:8889";
-        static Random r = new Random();
-        static string GenerateRandomRoom()
-        {
-            String url = SIGNALINGSERVER + $"/Room{r.Next(1000)}";
-            return url;
-        }
-        static string GenerateRandomUrl()
-        {
-            String url = GenerateRandomRoom() + $"/Streamer{r.Next(1000)}";
-            return url;
-        }
+        
     }
 }

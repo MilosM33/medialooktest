@@ -1,41 +1,25 @@
+// Setup
+
 const btnConnect = document.getElementById("btnConnect");
 const btnSwitch = document.getElementById("btnSwitch");
 const cameraNumber = document.getElementById("cameraNumber");
 const peerInput = document.getElementById("peerInput");
 const roomInput = document.getElementById("roomInput");
 
-const videoContainer = document.getElementById("videoContainer");
-const masterContainer = document.getElementById("masterContainer");
+const inputContainer = document.getElementById("inputContainer");
+const outputContainer = document.getElementById("outputContainer");
 let masterId = "";
 const signalingServer = "http://rtc.medialooks.com:8889";
 
-let webrtc;
-let peerId;
-let room;
+let output;
 
 btnConnect.addEventListener("click", connect);
 btnSwitch.addEventListener("click", switchCamera);
 
-function switchCamera() {
-  let value = cameraNumber.value;
-  if (value == "") {
-    value = 0;
-  }
-  webrtc.sendDataChannelMessageToPeer(peerId, value);
-}
-function addVideo(video) {
-  const parrent = document.createElement("div");
-  parrent.className = "col-md-4";
-  parrent.appendChild(video);
-  return parrent;
-}
-
-function connect() {
-  peerId = peerInput.value == "" ? "Streamer983" : peerInput.value;
-  room = roomInput.value == "" ? "Room505" : roomInput.value;
+function connectToPeer(peerId) {
   webrtc = new SimpleWebRTC({
     target: peerId,
-    url: signalingServer,
+    url: "http://rtc.medialooks.com:8889/",
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
       {
@@ -56,48 +40,61 @@ function connect() {
     },
   });
 
-  if (room) {
-    webrtc.joinRoom(room);
-  }
+  webrtc.joinRoom("Room9999");
+  return webrtc;
+}
 
+function onAddVideo(webrtc, containerId) {
   webrtc.on("videoAdded", function (video, peer) {
     console.log("video added", peer);
-    var container = document.getElementById("videoContainer");
+    const container = document.getElementById(containerId);
+
     video.setAttribute("loop", "");
     video.setAttribute("autoplay", "true");
+    video.setAttribute("muted", "true");
     video.setAttribute("controls", "");
-    video.setAttribute("width", "100%");
-    video.setAttribute("height", "100%");
+    video.setAttribute("width", "480px");
 
-    // ak master je prazdny
-    if (masterContainer.childElementCount === 0) {
-      masterContainer.appendChild(video);
-      masterId = video.id;
-    } else {
-      container.appendChild(addVideo(video));
-    }
-
+    container.innerHTML = "";
+    container.appendChild(video);
     webrtc.stopLocalVideo();
     video.muted = true;
     video.play();
   });
+}
 
+function onRemoveVideo(webrtc, containerId) {
   webrtc.on("videoRemoved", function (video, peer) {
-    console.log("video removed ", peer);
-    var video = document.getElementById(video.id).parentNode;
-    if (masterId === video.id) {
-      masterContainer.removeChild(video);
-    } else {
-      videoContainer.removeChild(video);
-    }
-
-    if (
-      peer.id == peerId ||
-      peer.strongId == peerId ||
-      peer.nickName == peerId
-    ) {
-      var videoStub = document.createElement("video");
-      container.appendChild(videoStub);
-    }
+    console.log("video removed", peer);
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
   });
+}
+
+// Controls
+
+function switchCamera() {
+  let value = cameraNumber.value;
+  if (value == "") {
+    value = 0;
+  }
+  output.sendDataChannelMessageToPeer("Output", value);
+}
+
+function connect() {
+  output = connectToPeer("Output");
+  onAddVideo(output, "outputContainer");
+  onRemoveVideo(output, "outputContainer");
+
+  const input1 = connectToPeer("Input1");
+  onAddVideo(input1, "inputContainer1");
+  onRemoveVideo(input1, "inputContainer1");
+
+  const input2 = connectToPeer("Input2");
+  onAddVideo(input2, "inputContainer2");
+  onRemoveVideo(input2, "inputContainer2");
+
+  const input3 = connectToPeer("Input3");
+  onAddVideo(input3, "inputContainer3");
+  onRemoveVideo(input3, "inputContainer3");
 }
