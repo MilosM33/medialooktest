@@ -29,21 +29,21 @@ namespace MediaLooksTest
 
 
             // Output stream
-            OutputStream stream1 = new OutputStream(ROOM_URL, "Output");
+            OutputStream stream1 = new OutputStream(ROOM_URL, streamer_name:"Output");
             stream1.Init();
             stream1.AddVideoSource(output.GetSource());
 
 
             // Previews of input streams
-            InputStream stream2 = new InputStream(ROOM_URL, "Input1");
+            InputStream stream2 = new InputStream(ROOM_URL, streamer_name: "Input1");
             stream2.Init();
             stream2.AddVideoSource(input1.GetSource());
 
-            InputStream stream3 = new InputStream(ROOM_URL, "Input2");
+            InputStream stream3 = new InputStream(ROOM_URL, streamer_name: "Input2");
             stream3.Init();
             stream3.AddVideoSource(input2.GetSource());
 
-            InputStream stream4 = new InputStream(ROOM_URL, "Input3");
+            InputStream stream4 = new InputStream(ROOM_URL, streamer_name: "Input3");
             stream4.Init();
             stream4.AddVideoSource(input3.GetSource());
 
@@ -54,7 +54,9 @@ namespace MediaLooksTest
                 input1, input2, input3
             };
 
+            // Output stream webrtc
             MWebRTCClass webrtc = stream1.GetWebRTC();
+
             CommunicationStream communicationStream = new CommunicationStream(webrtc);
             communicationStream.SetInputs(inputs);
 
