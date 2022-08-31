@@ -10,28 +10,24 @@ namespace MediaLooksTest
     internal class Program
     {
 
-        static string videoPath = AppDomain.CurrentDomain.BaseDirectory;
 
         static ZInputFile input1 = new ZInputFile("video1.mp4");
-        static ZInputFile input2 = new ZInputFile("video1.mp4");
-        static ZInputFile input3 = new ZInputFile("video2.mp4");
+        static ZInputFile input2 = new ZInputFile("video2.mp4");
+
+
+        const string ROOM_URL = "http://rtc.medialooks.com:8889/Room9999/";
 
         static ZInputStream outputStream = new ZInputStream(ROOM_URL, streamer_name: "Output");
         static ZInputStream inputStream1 = new ZInputStream(ROOM_URL, streamer_name: "Input1");
         static ZInputStream inputStream2 = new ZInputStream(ROOM_URL, streamer_name: "Input2");
 
-        
-        const string ROOM_URL = "http://rtc.medialooks.com:8889/Room9999/";
         static void Main(string[] args)
         {
-            
-            Console.WriteLine(ROOM_URL);
-
             // Add inputs to stream
 
             outputStream.AddVideoSource(input1.GetSource());
-            inputStream1.AddVideoSource(input2.GetSource());
-            inputStream2.AddVideoSource(input3.GetSource());
+            inputStream1.AddVideoSource(input1.GetSource());
+            inputStream2.AddVideoSource(input2.GetSource());
             
             // Communication layer
 
@@ -51,10 +47,10 @@ namespace MediaLooksTest
                 switch (value)
                 {
                     case 1:
-                        outputStream.ChangeVideoSource(input2.GetSource());
+                        outputStream.ChangeVideoSource(input1.GetSource());
                         break;
                     case 2:
-                        outputStream.ChangeVideoSource(input3.GetSource());
+                        outputStream.ChangeVideoSource(input2.GetSource());
                         break;
                     default:
                         break;

@@ -34,13 +34,9 @@ namespace MediaLooksTest
         }
         public void ChangeVideoSource(MFileClass source)
         {
-            String path;
-            double position;
-            source.FileNameGet(out path);
-            source.FilePosGet(out position);
-
-            _source.FileNameSet(path, "");
-            _source.FilePosSet(position, 0);
+            _source.PluginsRemove(_webrtc);
+            _source = source;
+            _source.PluginsAdd(_webrtc, 10);
         }
         public MWebRTCClass GetWebRTC()
         {
