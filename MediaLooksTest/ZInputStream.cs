@@ -10,11 +10,13 @@ namespace MediaLooksTest
     {
         private MWebRTCClass _webrtc;
         private String _url;
+        private MFileClass _source;
         public ZInputStream(String room_url, String streamer_name)
         {
             _webrtc = new MWebRTCClass();
             _url = room_url + streamer_name;
 
+            this.Init();
         }
 
         public void Init()
@@ -25,10 +27,24 @@ namespace MediaLooksTest
             _webrtc.Login(_url, "", out _);
 
         }
-
         public void AddVideoSource(MFileClass source)
         {
-            source.PluginsAdd(_webrtc, 10);
+            _source = source;
+            _source.PluginsAdd(_webrtc, 10);
+        }
+        public void ChangeVideoSource(MFileClass source)
+        {
+            String path;
+            double position;
+            source.FileNameGet(out path);
+            source.FilePosGet(out position);
+
+            _source.FileNameSet(path, "");
+            _source.FilePosSet(position, 0);
+        }
+        public MWebRTCClass GetWebRTC()
+        {
+            return _webrtc;
         }
     }
 }
