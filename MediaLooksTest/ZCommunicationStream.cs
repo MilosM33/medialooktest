@@ -12,6 +12,8 @@ namespace MediaLooksTest
         public ZCommunicationStream(ZInputStream stream)
         {
             _webrtc = stream.GetWebRTC();
+            Console.WriteLine("WebRTC listening");
+
         }
     }
 }

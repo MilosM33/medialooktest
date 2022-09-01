@@ -14,7 +14,6 @@ namespace MediaLooksTest
         static ZInputFile input1 = new ZInputFile("video1.mp4");
         static ZInputFile input2 = new ZInputFile("video2.mp4");
 
-
         const string ROOM_URL = "http://rtc.medialooks.com:8889/Room9999/";
 
         static ZInputStream outputStream = new ZInputStream(ROOM_URL, streamer_name: "Output");
@@ -23,6 +22,8 @@ namespace MediaLooksTest
 
         static void Main(string[] args)
         {
+
+            Console.WriteLine(ROOM_URL);
             // Add inputs to stream
 
             outputStream.AddVideoSource(input1.GetSource());

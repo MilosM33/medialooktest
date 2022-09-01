@@ -31,6 +31,7 @@ namespace MediaLooksTest
         {
             _source = source;
             _source.PluginsAdd(_webrtc, 10);
+            Console.WriteLine("Video source added");
         }
         public void ChangeVideoSource(MFileClass source)
         {
